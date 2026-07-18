@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://usage-guide.fallbakit.com/sitemap.xml

@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Fallbakit — Usage Guide</title>
+  <meta name="description" content="The complete setup and usage guide for Fallbakit — local-first AI inference with automatic cloud fallback behind one OpenAI-compatible endpoint. Dashboard, CLI, tunnel agent, SDKs, routing controls, deployment, and reference." />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Fallbakit — Usage Guide" />
+  <meta property="og:description" content="Set up Fallbakit end to end: dashboard, CLI, local runner, SDKs, cloud fallback, and deployment. Every command, fully detailed." />
+  <meta property="og:url" content="https://usage-guide.fallbakit.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="grid-far"></div>
+    <div class="grid-near"></div>
+    <div class="aurora aurora-lime"></div>
+    <div class="aurora aurora-cyan"></div>
+  </div>
+
+  <!-- ============ Top bar ============ -->
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <a class="brand" href="#top" aria-label="Fallbakit home">
+      <img src="assets/logo.svg" alt="" width="26" height="26" />
+      <span class="brand-word">Fallba<span class="accent">kit</span></span>
+      <span class="brand-tag">Usage Guide</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#quickstart">Quickstart</a>
+      <a href="#cli">CLI</a>
+      <a href="#runner">Local runner</a>
+      <a href="#call-api">SDKs</a>
+      <a href="#reference">Reference</a>
+    </nav>
+    <div class="top-actions">
+      <a class="icon-link" href="https://github.com/Fallbakit" target="_blank" rel="noopener" aria-label="Fallbakit on GitHub" title="GitHub">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.92 1.23 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.21.7.82.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
+      </a>
+      <a class="btn btn-primary" href="https://fallbakit.com" target="_blank" rel="noopener">
+        Open dashboard
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <div class="layout">
+    <!-- ============ Sidebar TOC ============ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="side-group">
+        <div class="side-group-label">Get started</div>
+        <a class="side-link" href="#overview"><span class="side-num">01</span> How it works</a>
+        <a class="side-link" href="#prerequisites"><span class="side-num">02</span> Prerequisites</a>
+        <a class="side-link" href="#quickstart"><span class="side-num">03</span> Quickstart</a>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Set up</div>
+        <a class="side-link" href="#dashboard"><span class="side-num">04</span> Dashboard &amp; keys</a>
+        <a class="side-link" href="#cli"><span class="side-num">05</span> Install the CLI</a>
+        <a class="side-link" href="#runner"><span class="side-num">06</span> Local runner</a>
+        <a class="side-link" href="#fallback"><span class="side-num">07</span> Cloud fallback</a>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Build</div>
+        <a class="side-link" href="#call-api"><span class="side-num">08</span> Call the API</a>
+        <a class="side-link" href="#controls"><span class="side-num">09</span> Routing controls</a>
+        <a class="side-link" href="#monitor"><span class="side-num">10</span> Monitor usage</a>
+      </div>
+      <div class="side-group">
+        <div class="side-group-label">Operate</div>
+        <a class="side-link" href="#deploy"><span class="side-num">11</span> Deploy the agent</a>
+        <a class="side-link" href="#standalone"><span class="side-num">12</span> Standalone</a>
+        <a class="side-link" href="#troubleshooting"><span class="side-num">13</span> Troubleshooting</a>
+        <a class="side-link" href="#reference"><span class="side-num">14</span> Reference</a>
+      </div>
+    </aside>
+
+    <!-- ============ Content ============ -->
+    <main class="content" id="top">
+      <div class="wrap">
+
+        <!-- Hero -->
+        <section class="hero" id="hero">
+          <div class="hero-kicker"><span class="dot"></span> Fallbakit · Usage Guide</div>
+          <h1>Run AI on hardware you own —<br><span class="accent">without losing reliability.</span></h1>
+          <p class="hero-sub">Fallbakit gives your app one OpenAI-compatible endpoint that routes to your local model first (Ollama, oMLX, vLLM) and falls back to the cloud only when local can't serve. This guide takes you from zero to a working local-first route — every command, dashboard step, and config option.</p>
+          <div class="hero-chips">
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg> 5-minute quickstart</span>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg> OpenAI-compatible</span>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Outbound-only, BYOK</span>
+          </div>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#quickstart">Start the quickstart
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn" href="#call-api">Jump to the SDKs</a>
+          </div>
+        </section>
+
+        <!-- 01 · Overview -->
+        <section class="section" id="overview">
+          <div class="section-kicker"><span class="n">01</span> How it works</div>
+          <h2>One endpoint, two execution paths</h2>
+          <p class="lead">Your application keeps calling an OpenAI-style <code>chat/completions</code> API with one key. Fallbakit decides — per request — whether to serve from your local runtime or a cloud provider, and handles health checks, fallback, and usage tracking behind the scenes.</p>
+
+          <div class="diagram reveal">
+            <svg viewBox="0 0 720 300" role="img" aria-label="App calls Fallbakit, which routes to your local runner first and falls back to cloud">
+              <defs>
+                <linearGradient id="rg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d7e404"/><stop offset="1" stop-color="#8fe8f1"/></linearGradient>
+                <filter id="g" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <path d="M150 150 H262" fill="none" stroke="#929279" stroke-width="2.5"/>
+              <path id="wl" d="M452 150 C512 150 512 84 566 84" fill="none" stroke="#d7e404" stroke-width="3" class="route-draw"/>
+              <path d="M452 150 C512 150 512 216 566 216" fill="none" stroke="#8fe8f1" stroke-width="3" stroke-opacity=".5" stroke-dasharray="3 8"/>
+              <g><rect x="22" y="118" width="128" height="64" rx="7" fill="rgba(32,32,20,.5)" stroke="#474833" stroke-width="1.5"/><text x="86" y="146" class="b-title">Your app</text><text x="86" y="166" class="b-sub">OpenAI SDK · or_ key</text></g>
+              <g filter="url(#g)"><rect x="262" y="108" width="190" height="84" rx="9" fill="rgba(34,36,16,.85)" stroke="url(#rg)" stroke-width="1.6"/><text x="357" y="144" class="b-title" fill="#d7e404">Fallbakit</text><text x="357" y="166" class="b-sub">route · health · fallback</text></g>
+              <g><rect x="566" y="56" width="140" height="58" rx="7" fill="rgba(32,32,20,.5)" stroke="#474833" stroke-width="1.5"/><text x="636" y="80" class="b-title">Your hardware</text><text x="636" y="99" class="b-sub" fill="#d7e404">default ✓</text></g>
+              <g><rect x="566" y="186" width="140" height="58" rx="7" fill="rgba(32,32,20,.5)" stroke="#474833" stroke-width="1.5"/><text x="636" y="210" class="b-title">Cloud (BYOK)</text><text x="636" y="229" class="b-sub" fill="#8fe8f1">fallback</text></g>
+              <circle r="4.5" fill="#fff" filter="url(#g)"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#wl"/></animateMotion></circle>
+            </svg>
+          </div>
+
+          <div class="grid cols-3">
+            <div class="card reveal"><span class="card-ico">01</span><h3>App → Fallbakit</h3><p>Point the OpenAI base URL at <code>api.fallbakit.com/v1</code> and pass your <span class="kbadge k-app">or_ app key</span>. No app rewrite.</p></div>
+            <div class="card reveal"><span class="card-ico">02</span><h3>Local first</h3><p>The tunnel agent connects <strong>outbound-only</strong> to your Ollama / oMLX / vLLM runtime. No public ports, no reverse proxy.</p></div>
+            <div class="card reveal"><span class="card-ico">03</span><h3>Cloud fallback</h3><p>When local is offline, degraded, or bypassed, Fallbakit falls back to a BYOK provider you configured — if you allow it.</p></div>
+          </div>
+
+          <div class="callout info">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div>
+              <p><strong>Three keys, three homes — don't mix them.</strong> <span class="kbadge k-app">or_…</span> application keys go in your app/SDK. <span class="kbadge k-runner">rr_…</span> runner keys go in the tunnel agent. <span class="kbadge k-cli">cli_…</span> tokens go in the <code>fallbakit</code> CLI. Using one where another is expected returns <code>401</code>/<code>403</code>.</p>
+            </div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 02 · Prerequisites -->
+        <section class="section" id="prerequisites">
+          <div class="section-kicker"><span class="n">02</span> Prerequisites</div>
+          <h2>Before you start</h2>
+          <p>You'll want the following ready. Everything except the account is optional depending on how far you go.</p>
+          <ul>
+            <li>A <strong>Fallbakit account</strong> — sign in at <a href="https://fallbakit.com" target="_blank" rel="noopener">fallbakit.com</a>.</li>
+            <li>A <strong>local model runtime</strong> for local-first routing — <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a> (easiest), oMLX, or vLLM. Ollama listens on <code>:11434</code>; oMLX and vLLM on <code>:8000</code>.</li>
+            <li><strong>Your app's language toolchain</strong> — Python 3.9+ or Node.js 18+ for the SDKs.</li>
+            <li><strong>(Optional) A cloud provider key</strong> — OpenAI, Gemini, Anthropic, or OpenRouter — for BYOK fallback.</li>
+            <li><strong>(Optional) Docker</strong> — if you'd rather run the tunnel agent as a container or on a server.</li>
+          </ul>
+          <div class="callout tip">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+            <div><p><strong>Just want to test cloud fallback?</strong> You can skip the local runtime entirely — create an app key, add a BYOK provider, and every request goes straight to the cloud. Add the local runner later.</p></div>
+          </div>
+          <h4>Pull a local model (Ollama)</h4>
+          <pre><code class="lang-sh"># install Ollama from https://ollama.com, then pull a small model
+ollama pull llama3.2
+
+# confirm it serves on :11434
+curl http://localhost:11434/api/tags</code></pre>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 03 · Quickstart -->
+        <section class="section" id="quickstart">
+          <div class="section-kicker"><span class="n">03</span> Quickstart</div>
+          <h2>Local-first in five minutes</h2>
+          <p class="lead">The fast path: create an app key, connect one local runner with the CLI, then send a request. The CLI does the runner setup and launches the agent for you.</p>
+
+          <ol class="steps">
+            <li>
+              <div class="step-title">Install the CLI and sign in</div>
+              <pre><code class="lang-sh">curl -fsSL https://fallbakit.com/install.sh | sh
+fallbakit login</code></pre>
+              <p><code>login</code> opens your browser for device-flow auth and stores a <span class="kbadge k-cli">cli_…</span> token in <code>~/.fallbakit</code>.</p>
+            </li>
+            <li>
+              <div class="step-title">Create a runner and launch the agent</div>
+              <pre><code class="lang-sh">fallbakit runner create --runtime ollama --launch</code></pre>
+              <p>This registers a runner, downloads the tunnel agent, and connects it to your local Ollama on <code>:11434</code>. Leave it running — it's your local-first path.</p>
+            </li>
+            <li>
+              <div class="step-title">Scaffold an app + API key into your project</div>
+              <pre><code class="lang-sh">cd my-project
+fallbakit app init</code></pre>
+              <p>Detects Python/Node, creates an application and an <span class="kbadge k-app">or_…</span> key, and writes <code>FALLBAKIT_API_KEY</code> + <code>FALLBAKIT_BASE_URL</code> into a git-ignored <code>.env</code>.</p>
+            </li>
+            <li>
+              <div class="step-title">Send your first request</div>
+              <div class="tabs">
+                <div class="tab-btns">
+                  <button class="tab-btn active" data-tab="qpy">Python</button>
+                  <button class="tab-btn" data-tab="qnode">Node.js</button>
+                  <button class="tab-btn" data-tab="qcurl">curl</button>
+                </div>
+                <div class="tab-panel active" data-panel="qpy">
+                  <pre><code class="lang-py">import os
+from fallbakit import Fallbakit
+
+client = Fallbakit(api_key=os.environ["FALLBAKIT_API_KEY"])
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Say hello from my own hardware."}],
+)
+print(response["choices"][0]["message"]["content"])</code></pre>
+                </div>
+                <div class="tab-panel" data-panel="qnode">
+                  <pre><code class="lang-js">import { Fallbakit } from "@fallbakit/sdk";
+
+const client = new Fallbakit({ apiKey: process.env.FALLBAKIT_API_KEY });
+
+const response = await client.chat.completions.create({
+  model: "llama3.2",
+  messages: [{ role: "user", content: "Say hello from my own hardware." }],
+});
+console.log(response.choices[0].message.content);</code></pre>
+                </div>
+                <div class="tab-panel" data-panel="qcurl">
+                  <pre><code class="lang-sh">curl https://api.fallbakit.com/v1/chat/completions \
+  -H "Authorization: Bearer $FALLBAKIT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"llama3.2","messages":[{"role":"user","content":"Say hello from my own hardware."}]}'</code></pre>
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          <div class="callout tip">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><p>That's a full local-first route. Check where it ran with <code>fallbakit requests</code> — the <code>ROUTE</code> column shows <code>local</code> or <code>cloud</code>. The rest of this guide covers each piece in depth.</p></div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 04 · Dashboard -->
+        <section class="section" id="dashboard">
+          <div class="section-kicker"><span class="n">04</span> Dashboard &amp; keys</div>
+          <h2>Set up in the dashboard</h2>
+          <p>Prefer clicking to typing? Everything the CLI does, you can do in the dashboard at <a href="https://fallbakit.com" target="_blank" rel="noopener">fallbakit.com</a>. This is also where API keys, runner status, provider credentials, billing, and usage live.</p>
+
+          <ol class="steps">
+            <li>
+              <div class="step-title">Create an application</div>
+              <p>Dashboard → <strong>Applications → New application</strong>. An application groups keys, requests, and usage for one app or service.</p>
+            </li>
+            <li>
+              <div class="step-title">Copy the application API key</div>
+              <p>The key is prefixed <span class="kbadge k-app">or_…</span> and <strong>shown once</strong> — store it now. This is what your app and the SDKs use. Set it as an environment variable rather than hard-coding it:</p>
+              <pre><code class="lang-sh">export FALLBAKIT_API_KEY=or_your_generated_api_key</code></pre>
+            </li>
+            <li>
+              <div class="step-title">Create a runner (for local-first routing)</div>
+              <p>Dashboard → <strong>Runners → New runner</strong>. Pick the runtime (Ollama / oMLX / vLLM). You'll get a <span class="kbadge k-runner">rr_…</span> runner key and a <code>FALLBAKIT_RUNNER_ID</code>. These belong to the <em>tunnel agent</em>, not your app.</p>
+            </li>
+            <li>
+              <div class="step-title">Add a cloud provider (for fallback)</div>
+              <p>Dashboard → <strong>Providers → Add provider</strong>. Paste your own OpenAI / Gemini / Anthropic / OpenRouter key (BYOK). Fallbakit never resells tokens — the provider bills you directly.</p>
+            </li>
+            <li>
+              <div class="step-title">Generate a CLI token (optional, for CI)</div>
+              <p>Dashboard → <strong>Settings → CLI tokens</strong> for a <span class="kbadge k-cli">cli_…</span> token you can pass to <code>fallbakit login --token</code> on servers where a browser isn't available.</p>
+            </li>
+          </ol>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Key</th><th>Prefix</th><th>Belongs to</th><th>Set as</th></tr></thead>
+              <tbody>
+                <tr><td>Application key</td><td><span class="kbadge k-app">or_</span></td><td>Your app &amp; the SDKs</td><td><code>FALLBAKIT_API_KEY</code></td></tr>
+                <tr><td>Runner key</td><td><span class="kbadge k-runner">rr_</span></td><td>The tunnel agent</td><td><code>FALLBAKIT_RUNNER_API_KEY</code></td></tr>
+                <tr><td>CLI token</td><td><span class="kbadge k-cli">cli_</span></td><td>The <code>fallbakit</code> CLI</td><td><code>FALLBAKIT_TOKEN</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 05 · CLI -->
+        <section class="section" id="cli">
+          <div class="section-kicker"><span class="n">05</span> Install the CLI</div>
+          <h2>The <code>fallbakit</code> CLI</h2>
+          <p>The CLI manages runners, applications, keys, and insights from your terminal. It talks to the dashboard management API with your <span class="kbadge k-cli">cli_…</span> token.</p>
+
+          <h3>Install</h3>
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="cli-curl">curl</button>
+              <button class="tab-btn" data-tab="cli-brew">Homebrew</button>
+              <button class="tab-btn" data-tab="cli-go">Go</button>
+            </div>
+            <div class="tab-panel active" data-panel="cli-curl">
+              <pre><code class="lang-sh">curl -fsSL https://fallbakit.com/install.sh | sh
+# installs to ~/.fallbakit/bin — add it to your PATH if needed</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="cli-brew">
+              <pre><code class="lang-sh">brew install --cask fallbakit/homebrew-tap/fallbakit</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="cli-go">
+              <pre><code class="lang-sh">go install github.com/fallbakit/cli/cmd/fallbakit-cli@latest</code></pre>
+            </div>
+          </div>
+
+          <h3>Authenticate</h3>
+          <pre><code class="lang-sh">fallbakit login                     # opens a browser (device flow)
+fallbakit login --token cli_xxx     # non-interactive, for CI / servers
+fallbakit whoami                    # show the signed-in user + account + plan
+fallbakit logout                    # remove stored credentials</code></pre>
+
+          <h3>Runners</h3>
+          <pre><code class="lang-sh">fallbakit runner create --runtime ollama --launch     # create + connect in one step
+fallbakit runner create --name "GPU box" --runtime vllm --target docker \
+  --local-url http://localhost:8000
+fallbakit runner up &lt;runner-id&gt;      # launch the agent for an existing runner
+fallbakit runner list                # alias: ls
+fallbakit runner status              # live status of every runner
+fallbakit runner status &lt;id&gt; --watch # diagnose one runner, refreshing every 3s
+fallbakit runner rotate &lt;id&gt;         # rotate its rr_ key
+fallbakit runner rm &lt;id&gt;             # delete it</code></pre>
+          <p><code>runner create</code> flags: <code>--name</code>, <code>--runtime</code> (<code>ollama</code>|<code>omlx</code>|<code>vllm</code>), <code>--target</code> (<code>binary</code>|<code>docker</code>), <code>--local-url</code>, <code>--launch</code>. It saves credentials to <code>~/.fallbakit/runners/&lt;id&gt;.json</code> and prints the runner env block.</p>
+
+          <h3>Applications &amp; keys</h3>
+          <pre><code class="lang-sh">fallbakit app init                   # detect project, create app + or_ key, write .env
+fallbakit app init --name billing-api
+fallbakit app init --no-files        # mint the key only, don't touch project files
+fallbakit app list                   # alias: ls
+fallbakit app enable  &lt;app-id&gt;
+fallbakit app disable &lt;app-id&gt;
+fallbakit app key create --app &lt;id&gt; --name "prod key"
+fallbakit app key rm &lt;key-id&gt; --app &lt;id&gt;</code></pre>
+
+          <h3>Insights</h3>
+          <pre><code class="lang-sh">fallbakit requests                          # last 20 requests, default app, 24h
+fallbakit requests --limit 50 --range 7d
+fallbakit requests --app billing-api --watch
+fallbakit usage --range 30d                 # totals: local vs cloud, cost, savings
+fallbakit usage --app billing-api --json</code></pre>
+          <p><code>--range</code> accepts <code>24h</code>, <code>7d</code>, or <code>30d</code>. Add <code>--json</code> for raw output, <code>--watch</code> to refresh live.</p>
+
+          <h3>Config</h3>
+          <pre><code class="lang-sh">fallbakit config path                                  # ~/.fallbakit
+fallbakit config get                                   # resolved dashboard + API URLs
+fallbakit config set apiBaseUrl https://api.fallbakit.com
+fallbakit version</code></pre>
+          <div class="callout info">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div><p>Precedence for every setting is <strong>flag → environment variable → config file → default</strong>. Defaults point at the hosted service: dashboard <code>https://fallbakit.com</code>, API <code>https://api.fallbakit.com</code>.</p></div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 06 · Local runner / tunnel agent -->
+        <section class="section" id="runner">
+          <div class="section-kicker"><span class="n">06</span> Local runner</div>
+          <h2>Connect a local runner (tunnel agent)</h2>
+          <p class="lead">The open-source <code>fallbakit-agent</code> runs next to your model and opens an <strong>outbound</strong> WebSocket tunnel to Fallbakit. Your runtime is never exposed to the internet — no inbound ports, no public IP. If you ran <code>fallbakit runner create --launch</code>, the CLI already did this; the manual setup below is for servers and containers.</p>
+
+          <h3>Install the agent</h3>
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="ag-bin">Binary</button>
+              <button class="tab-btn" data-tab="ag-docker">Docker</button>
+              <button class="tab-btn" data-tab="ag-src">Source</button>
+            </div>
+            <div class="tab-panel active" data-panel="ag-bin">
+              <pre><code class="lang-sh"># download the archive for your OS/arch from the releases page, then:
+tar -xzf fallbakit-agent_&lt;version&gt;_&lt;os&gt;_&lt;arch&gt;.tar.gz
+sha256sum -c checksums.txt --ignore-missing
+sudo mv fallbakit-agent /usr/local/bin/
+fallbakit-agent -h</code></pre>
+              <p>Prebuilt for <code>linux</code>/<code>darwin</code>, <code>amd64</code>/<code>arm64</code> — <a href="https://github.com/Fallbakit/tunnel/releases" target="_blank" rel="noopener">github.com/Fallbakit/tunnel/releases</a>.</p>
+            </div>
+            <div class="tab-panel" data-panel="ag-docker">
+              <pre><code class="lang-sh">docker pull ghcr.io/fallbakit/fallbakit-agent:latest</code></pre>
+              <p>A distroless, non-root static image. See <a href="#deploy">Deploy the agent</a> for run commands.</p>
+            </div>
+            <div class="tab-panel" data-panel="ag-src">
+              <pre><code class="lang-sh">git clone https://github.com/Fallbakit/tunnel.git
+cd tunnel
+go build -trimpath -ldflags="-s -w" -o fallbakit-agent ./cmd/fallbakit-agent
+./fallbakit-agent -h</code></pre>
+              <p>Requires Go 1.25+.</p>
+            </div>
+          </div>
+
+          <h3>Run it</h3>
+          <p>Set the runner credentials from the dashboard, pick your runtime, and start. Pick the tab for your local runtime:</p>
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="rt-ollama">Ollama</button>
+              <button class="tab-btn" data-tab="rt-omlx">oMLX</button>
+              <button class="tab-btn" data-tab="rt-vllm">vLLM</button>
+            </div>
+            <div class="tab-panel active" data-panel="rt-ollama">
+              <pre><code class="lang-sh">export FALLBAKIT_RUNNER_ID=runner_from_dashboard
+export FALLBAKIT_RUNNER_API_KEY=rr_from_dashboard
+export FALLBAKIT_BASE_URL=https://api.fallbakit.com
+export FALLBAKIT_LOCAL_PROVIDER=ollama
+export FALLBAKIT_LOCAL_BASE_URL=http://localhost:11434
+
+fallbakit-agent</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="rt-omlx">
+              <pre><code class="lang-sh">export FALLBAKIT_RUNNER_ID=runner_from_dashboard
+export FALLBAKIT_RUNNER_API_KEY=rr_from_dashboard
+export FALLBAKIT_BASE_URL=https://api.fallbakit.com
+export FALLBAKIT_LOCAL_PROVIDER=omlx
+export FALLBAKIT_LOCAL_BASE_URL=http://localhost:8000
+
+fallbakit-agent</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="rt-vllm">
+              <pre><code class="lang-sh">export FALLBAKIT_RUNNER_ID=runner_from_dashboard
+export FALLBAKIT_RUNNER_API_KEY=rr_from_dashboard
+export FALLBAKIT_BASE_URL=https://api.fallbakit.com
+export FALLBAKIT_LOCAL_PROVIDER=vllm
+export FALLBAKIT_LOCAL_BASE_URL=http://localhost:8000
+export FALLBAKIT_LOCAL_API_KEY=optional_vllm_api_key   # only if vLLM was started with --api-key
+
+fallbakit-agent</code></pre>
+            </div>
+          </div>
+          <div class="callout warn">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+            <div><p><strong>Set <code>FALLBAKIT_LOCAL_BASE_URL</code> without <code>/v1</code>.</strong> The agent appends <code>/v1/chat/completions</code> and <code>/v1/models</code> itself. Use <code>http://localhost:8000</code>, not <code>http://localhost:8000/v1</code>.</p></div>
+          </div>
+
+          <h3>Configuration reference</h3>
+          <p>Precedence is <strong>CLI flags → environment → YAML file → defaults</strong>. Point at a YAML file with <code>-config &lt;path&gt;</code> or <code>FALLBAKIT_AGENT_CONFIG</code>. Durations use Go syntax (<code>1s</code>, <code>500ms</code>, <code>2m</code>).</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Environment variable</th><th>Flag / YAML</th><th>Default</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><code>FALLBAKIT_RUNNER_API_KEY</code></td><td><code>-api-key</code></td><td><em>required</em></td><td>Runner key (<code>rr_…</code>) for bootstrap</td></tr>
+                <tr><td><code>FALLBAKIT_RUNNER_ID</code></td><td><code>-runner-id</code></td><td><em>required</em></td><td>Dashboard-generated runner id</td></tr>
+                <tr><td><code>FALLBAKIT_BASE_URL</code></td><td><code>-base-url</code></td><td><code>api.fallbakit.com</code></td><td>Fallbakit platform origin</td></tr>
+                <tr><td><code>FALLBAKIT_LOCAL_PROVIDER</code></td><td><code>-local-provider</code></td><td><code>ollama</code></td><td><code>ollama</code> · <code>omlx</code> · <code>vllm</code></td></tr>
+                <tr><td><code>FALLBAKIT_LOCAL_BASE_URL</code></td><td><code>-local-base-url</code></td><td>:11434 / :8000</td><td>Local runtime origin (no <code>/v1</code>)</td></tr>
+                <tr><td><code>FALLBAKIT_LOCAL_API_KEY</code></td><td><code>-local-api-key</code></td><td>empty</td><td>Forwarded only agent → local runtime</td></tr>
+                <tr><td><code>FALLBAKIT_AGENT_ID</code></td><td><code>-agent-id</code></td><td>hostname</td><td>Stable agent id in tunnel metadata</td></tr>
+                <tr><td><code>FALLBAKIT_METRICS_ADDR</code></td><td><code>-metrics-addr</code></td><td>disabled</td><td>Health/metrics listener, e.g. <code>:9093</code></td></tr>
+                <tr><td><code>FALLBAKIT_LOG_FORMAT</code></td><td><code>-log-format</code></td><td><code>text</code></td><td><code>text</code> or <code>json</code></td></tr>
+                <tr><td><code>FALLBAKIT_MIN_BACKOFF</code></td><td><code>-min-backoff</code></td><td><code>1s</code></td><td>Minimum reconnect backoff</td></tr>
+                <tr><td><code>FALLBAKIT_MAX_BACKOFF</code></td><td><code>-max-backoff</code></td><td><code>30s</code></td><td>Maximum reconnect backoff</td></tr>
+                <tr><td><code>FALLBAKIT_CONNECT_TIMEOUT</code></td><td><code>-connect-timeout</code></td><td><code>10s</code></td><td>Bootstrap HTTP timeout</td></tr>
+                <tr><td><code>FALLBAKIT_LOCAL_TIMEOUT</code></td><td><code>-local-timeout</code></td><td><code>3s</code></td><td>Local readiness-probe timeout</td></tr>
+                <tr><td><code>FALLBAKIT_OTEL_ENDPOINT</code></td><td><code>-otel-endpoint</code></td><td>empty</td><td>OTLP/HTTP trace endpoint</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>YAML config file</h4>
+          <pre><code class="lang-yaml"># agent.yaml — run with: fallbakit-agent -config agent.yaml
+api_key: "rr_from_dashboard"
+runner_id: "runner_from_dashboard"
+base_url: "https://api.fallbakit.com"
+local_provider: "ollama"          # ollama, omlx, or vllm
+local_base_url: "http://localhost:11434"
+local_api_key: ""                 # forwarded only agent -> local runtime
+agent_id: "workstation-01"
+metrics_addr: ":9093"
+log_format: "json"
+min_backoff: "1s"
+max_backoff: "30s"
+connect_timeout: "10s"
+local_timeout: "3s"</code></pre>
+
+          <h4>Local runtimes at a glance</h4>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Runtime</th><th>Default base URL</th><th>Readiness probe</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><code>ollama</code></td><td><code>http://localhost:11434</code></td><td><code>GET /api/tags</code></td><td>Default provider</td></tr>
+                <tr><td><code>omlx</code></td><td><code>http://localhost:8000</code></td><td><code>GET /v1/models</code></td><td>OpenAI-compatible</td></tr>
+                <tr><td><code>vllm</code></td><td><code>http://localhost:8000</code></td><td><code>GET /v1/models</code></td><td>Set <code>local_api_key</code> if started with <code>--api-key</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 07 · Cloud fallback -->
+        <section class="section" id="fallback">
+          <div class="section-kicker"><span class="n">07</span> Cloud fallback</div>
+          <h2>Add cloud fallback (BYOK)</h2>
+          <p>Fallback keeps you reliable when local can't serve — the runtime is offline, the model is missing, or the request times out. You bring your own provider key; the provider bills you directly.</p>
+          <ol class="steps">
+            <li>
+              <div class="step-title">Add a provider in the dashboard</div>
+              <p>Dashboard → <strong>Providers → Add provider</strong>, then paste your own key for OpenAI, Gemini, Anthropic, or OpenRouter.</p>
+            </li>
+            <li>
+              <div class="step-title">Choose fallback behavior</div>
+              <p>Fallback is <strong>on by default</strong>. You can steer it per request (see <a href="#controls">Routing controls</a>) — force local, disable fallback, or pin a specific fallback provider and model.</p>
+            </li>
+            <li>
+              <div class="step-title">Set spend limits (optional)</div>
+              <p>Cap BYOK spend in the dashboard so runaway fallback can't surprise your cloud bill. Estimated provider cost and estimated local savings both show up in usage.</p>
+            </li>
+          </ol>
+          <div class="callout info">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div><p>Provider keys, billing, and fallback decisions all live <strong>server-side</strong> in Fallbakit — never in your client and never in the tunnel agent.</p></div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 08 · Call the API -->
+        <section class="section" id="call-api">
+          <div class="section-kicker"><span class="n">08</span> Call the API</div>
+          <h2>Call the API from your app</h2>
+          <p class="lead">Use the Fallbakit SDK, or point the official OpenAI SDK at Fallbakit — the endpoint is OpenAI-compatible. Either way you pass one <span class="kbadge k-app">or_…</span> key and hit <code>POST /v1/chat/completions</code>.</p>
+
+          <h3>Install &amp; first call</h3>
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="c-py">Python SDK</button>
+              <button class="tab-btn" data-tab="c-node">Node SDK</button>
+              <button class="tab-btn" data-tab="c-openai">OpenAI SDK</button>
+              <button class="tab-btn" data-tab="c-curl">curl</button>
+            </div>
+            <div class="tab-panel active" data-panel="c-py">
+              <pre><code class="lang-sh">pip install fallbakit</code></pre>
+              <pre><code class="lang-py">import os
+from fallbakit import Fallbakit
+
+client = Fallbakit(api_key=os.environ["FALLBAKIT_API_KEY"])
+
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Write a tiny launch checklist."}],
+)
+print(response["choices"][0]["message"]["content"])</code></pre>
+              <p>Python 3.9+, zero third-party runtime dependencies. Base URL defaults to <code>https://api.fallbakit.com</code>.</p>
+            </div>
+            <div class="tab-panel" data-panel="c-node">
+              <pre><code class="lang-sh">npm install @fallbakit/sdk</code></pre>
+              <pre><code class="lang-js">import { Fallbakit } from "@fallbakit/sdk";
+
+const client = new Fallbakit({ apiKey: process.env.FALLBAKIT_API_KEY });
+
+const response = await client.chat.completions.create({
+  model: "llama3.2",
+  messages: [{ role: "user", content: "Write a tiny launch checklist." }],
+});
+console.log(response.choices[0].message.content);</code></pre>
+              <p>Node 18+ (global <code>fetch</code> + Web Streams), ESM-only, zero runtime deps.</p>
+            </div>
+            <div class="tab-panel" data-panel="c-openai">
+              <p>Already using the OpenAI SDK? Change two things: the API key and the base URL (<strong>with <code>/v1</code></strong>).</p>
+              <pre><code class="lang-py">from openai import OpenAI
+
+client = OpenAI(
+    api_key=os.environ["FALLBAKIT_API_KEY"],
+    base_url="https://api.fallbakit.com/v1",
+)
+
+completion = client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Write a tiny launch checklist."}],
+)
+print(completion.choices[0].message.content)</code></pre>
+              <pre><code class="lang-js">import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.FALLBAKIT_API_KEY,
+  baseURL: "https://api.fallbakit.com/v1",
+});</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="c-curl">
+              <pre><code class="lang-sh">curl https://api.fallbakit.com/v1/chat/completions \
+  -H "Authorization: Bearer $FALLBAKIT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3.2",
+    "messages": [{ "role": "user", "content": "Write a tiny launch checklist." }]
+  }'</code></pre>
+            </div>
+          </div>
+
+          <h3>Streaming</h3>
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="s-py">Python</button>
+              <button class="tab-btn" data-tab="s-node">Node.js</button>
+            </div>
+            <div class="tab-panel active" data-panel="s-py">
+              <pre><code class="lang-py">for chunk in client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Stream a short answer."}],
+    stream=True,
+):
+    delta = chunk["choices"][0].get("delta", {})
+    print(delta.get("content", ""), end="", flush=True)
+print()</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="s-node">
+              <pre><code class="lang-js">const stream = await client.chat.completions.create({
+  model: "llama3.2",
+  messages: [{ role: "user", content: "Stream a short answer." }],
+  stream: true,
+});
+
+for await (const chunk of stream) {
+  process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
+}</code></pre>
+            </div>
+          </div>
+
+          <h3>Timeouts &amp; error handling</h3>
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="e-py">Python</button>
+              <button class="tab-btn" data-tab="e-node">Node.js</button>
+            </div>
+            <div class="tab-panel active" data-panel="e-py">
+              <pre><code class="lang-py">from fallbakit import Fallbakit, FallbakitAPIError, FallbakitError
+
+client = Fallbakit(api_key=os.environ["FALLBAKIT_API_KEY"], timeout=30)  # seconds, client-wide
+
+try:
+    client.chat.completions.create(
+        model="llama3.2",
+        messages=[{"role": "user", "content": "Hello"}],
+        timeout=10,  # per-request override
+    )
+except FallbakitAPIError as error:
+    print(error.status_code, error.code, error)
+except FallbakitError as error:
+    print("client error:", error)</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="e-node">
+              <pre><code class="lang-js">import { Fallbakit, FallbakitAPIError, FallbakitError } from "@fallbakit/sdk";
+
+const client = new Fallbakit({ apiKey: process.env.FALLBAKIT_API_KEY, timeoutMs: 30_000 });
+
+try {
+  await client.chat.completions.create({
+    model: "llama3.2",
+    messages: [{ role: "user", content: "Hello" }],
+    timeoutMs: 10_000, // per-request override
+  });
+} catch (error) {
+  if (error instanceof FallbakitAPIError) {
+    console.error(error.status, error.code, error.message);
+  } else if (error instanceof FallbakitError) {
+    console.error("client error:", error.message);
+  } else {
+    throw error;
+  }
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 09 · Routing controls -->
+        <section class="section" id="controls">
+          <div class="section-kicker"><span class="n">09</span> Routing controls</div>
+          <h2>Routing &amp; fallback controls</h2>
+          <p>By default Fallbakit routes local-first and falls back to cloud when needed. Override that per request. Python uses <code>snake_case</code> keyword arguments; Node uses <code>camelCase</code> params.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Python</th><th>Node</th><th>Type</th><th>Default</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td><code>fallback</code></td><td><code>fallback</code></td><td>bool</td><td><code>true</code></td><td>Allow cloud fallback at all</td></tr>
+                <tr><td><code>force_local</code></td><td><code>forceLocal</code></td><td>bool</td><td><code>false</code></td><td>Require the local runner</td></tr>
+                <tr><td><code>local_model_only</code></td><td><code>localModelOnly</code></td><td>bool</td><td><code>false</code></td><td>Never leave local, even on failure</td></tr>
+                <tr><td><code>cloud_model_only</code></td><td><code>cloudModelOnly</code></td><td>bool</td><td><code>false</code></td><td>Skip local, go straight to cloud</td></tr>
+                <tr><td><code>fallback_provider</code></td><td><code>fallbackProvider</code></td><td>str</td><td>account default</td><td>Which BYOK provider to fall back to</td></tr>
+                <tr><td><code>fallback_model</code></td><td><code>fallbackModel</code></td><td>str</td><td>—</td><td>Which cloud model to fall back to</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="ctl-py">Python</button>
+              <button class="tab-btn" data-tab="ctl-node">Node.js</button>
+              <button class="tab-btn" data-tab="ctl-openai">OpenAI SDK</button>
+            </div>
+            <div class="tab-panel active" data-panel="ctl-py">
+              <pre><code class="lang-py"># Pin the fallback target and keep local-first
+client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Summarize local-first routing."}],
+    fallback_provider="openai",
+    fallback_model="gpt-4o-mini",
+)
+
+# Sensitive prompt — never leave local hardware
+client.chat.completions.create(
+    model="llama3.2",
+    messages=[{"role": "user", "content": "Redact this PII..."}],
+    local_model_only=True,
+)</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="ctl-node">
+              <pre><code class="lang-js">// Grouped form (Node-only): everything under `fallbakit`
+await client.chat.completions.create({
+  model: "llama3.2",
+  messages: [{ role: "user", content: "Summarize local-first routing." }],
+  fallbakit: {
+    fallbackProvider: "gemini",
+    fallbackModel: "gemini/gemini-1.5-flash",
+  },
+});</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="ctl-openai">
+              <p>With the OpenAI SDK, pass controls through <code>extra_body</code> under a <code>fallbakit</code> object:</p>
+              <pre><code class="lang-js">await client.chat.completions.create({
+  model: "llama3.2",
+  messages: [{ role: "user", content: "Summarize local-first routing." }],
+  extra_body: {
+    fallbakit: { fallbackProvider: "openai", fallbackModel: "gpt-4o-mini" },
+  },
+});</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 10 · Monitor -->
+        <section class="section" id="monitor">
+          <div class="section-kicker"><span class="n">10</span> Monitor usage</div>
+          <h2>See where every request ran</h2>
+          <p>Fallbakit tracks each route decision, local-vs-cloud split, estimated provider cost, estimated local savings, latency, and full request history. Read it from the CLI or the dashboard.</p>
+          <pre><code class="lang-sh">fallbakit requests --range 7d        # TIME · ROUTE · MODEL · STATUS · LATENCY · TOKENS · COST
+fallbakit usage --range 30d          # totals: requests, local, cloud, errors, spend, savings</code></pre>
+          <p>Diagnostic response headers help when debugging a single call:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Header</th><th>Tells you</th></tr></thead>
+              <tbody>
+                <tr><td><code>X-Fallbakit-Routed-To</code></td><td><code>local</code> or <code>cloud</code></td></tr>
+                <tr><td><code>X-Fallbakit-Health-State</code></td><td><code>HEALTHY</code> · <code>DEGRADED</code> · <code>FALLBACK</code> · <code>OFFLINE</code></td></tr>
+                <tr><td><code>X-Fallbakit-Runner-ID</code></td><td>Which runner served the request</td></tr>
+                <tr><td><code>X-Fallbakit-Request-ID</code></td><td>Correlate with logs and usage</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 11 · Deploy -->
+        <section class="section" id="deploy">
+          <div class="section-kicker"><span class="n">11</span> Deploy the agent</div>
+          <h2>Run the agent on a server</h2>
+          <p>For always-on local-first routing, run the tunnel agent as a container or service next to your model. It restarts and reconnects on its own with exponential backoff.</p>
+
+          <div class="tabs">
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="d-docker">Docker</button>
+              <button class="tab-btn" data-tab="d-compose">Compose</button>
+              <button class="tab-btn" data-tab="d-systemd">systemd</button>
+              <button class="tab-btn" data-tab="d-k8s">Kubernetes</button>
+            </div>
+            <div class="tab-panel active" data-panel="d-docker">
+              <pre><code class="lang-sh">docker run --rm \
+  -e FALLBAKIT_RUNNER_ID=runner_from_dashboard \
+  -e FALLBAKIT_RUNNER_API_KEY=rr_from_dashboard \
+  -e FALLBAKIT_BASE_URL=https://api.fallbakit.com \
+  -e FALLBAKIT_LOCAL_PROVIDER=ollama \
+  -e FALLBAKIT_LOCAL_BASE_URL=http://host.docker.internal:11434 \
+  -e FALLBAKIT_METRICS_ADDR=:9093 \
+  -p 9093:9093 \
+  --add-host=host.docker.internal:host-gateway \
+  ghcr.io/fallbakit/fallbakit-agent:latest</code></pre>
+              <p>Use <code>host.docker.internal</code> (with the <code>--add-host</code> flag) to reach a runtime on the host.</p>
+            </div>
+            <div class="tab-panel" data-panel="d-compose">
+              <pre><code class="lang-yaml">services:
+  fallbakit-agent:
+    image: ghcr.io/fallbakit/fallbakit-agent:latest
+    environment:
+      FALLBAKIT_RUNNER_ID: ${FALLBAKIT_RUNNER_ID:?set FALLBAKIT_RUNNER_ID}
+      FALLBAKIT_RUNNER_API_KEY: ${FALLBAKIT_RUNNER_API_KEY:?set FALLBAKIT_RUNNER_API_KEY}
+      FALLBAKIT_BASE_URL: ${FALLBAKIT_BASE_URL:-https://api.fallbakit.com}
+      FALLBAKIT_LOCAL_PROVIDER: ${FALLBAKIT_LOCAL_PROVIDER:-ollama}
+      FALLBAKIT_LOCAL_BASE_URL: ${FALLBAKIT_LOCAL_BASE_URL:-http://host.docker.internal:11434}
+      FALLBAKIT_METRICS_ADDR: ":9093"
+      FALLBAKIT_LOG_FORMAT: json
+    ports:
+      - "9093:9093"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped</code></pre>
+              <pre><code class="lang-sh">export FALLBAKIT_RUNNER_ID=runner_from_dashboard
+export FALLBAKIT_RUNNER_API_KEY=rr_from_dashboard
+docker compose up -d</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="d-systemd">
+              <pre><code class="lang-ini"># /etc/fallbakit/agent.env
+FALLBAKIT_RUNNER_ID=runner_from_dashboard
+FALLBAKIT_RUNNER_API_KEY=rr_from_dashboard
+FALLBAKIT_BASE_URL=https://api.fallbakit.com
+FALLBAKIT_LOCAL_PROVIDER=ollama
+FALLBAKIT_LOCAL_BASE_URL=http://localhost:11434
+FALLBAKIT_METRICS_ADDR=:9093
+FALLBAKIT_LOG_FORMAT=json</code></pre>
+              <pre><code class="lang-ini"># /etc/systemd/system/fallbakit-agent.service
+[Unit]
+Description=Fallbakit Tunnel Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=/etc/fallbakit/agent.env
+ExecStart=/usr/local/bin/fallbakit-agent
+Restart=always
+RestartSec=2
+DynamicUser=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+              <pre><code class="lang-sh">sudo chmod 600 /etc/fallbakit/agent.env
+sudo systemctl daemon-reload
+sudo systemctl enable --now fallbakit-agent
+journalctl -u fallbakit-agent -f</code></pre>
+            </div>
+            <div class="tab-panel" data-panel="d-k8s">
+              <pre><code class="lang-yaml"># Secret + ConfigMap + Deployment (metrics on :9093).
+# Liveness -> /healthz, readiness -> /readyz on the metrics port.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fallbakit-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: fallbakit-agent }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: fallbakit-agent }
+    spec:
+      containers:
+        - name: agent
+          image: ghcr.io/fallbakit/fallbakit-agent:latest
+          envFrom:
+            - configMapRef: { name: fallbakit-agent }
+          env:
+            - name: FALLBAKIT_RUNNER_API_KEY
+              valueFrom:
+                secretKeyRef: { name: fallbakit-agent, key: runner-api-key }
+          ports:
+            - { name: metrics, containerPort: 9093 }
+          readinessProbe:
+            httpGet: { path: /readyz, port: metrics }
+          livenessProbe:
+            httpGet: { path: /healthz, port: metrics }</code></pre>
+              <pre><code class="lang-sh">kubectl apply -f fallbakit-agent.yaml
+kubectl rollout status deployment/fallbakit-agent</code></pre>
+            </div>
+          </div>
+
+          <h4>Health endpoints</h4>
+          <p>Served only when <code>FALLBAKIT_METRICS_ADDR</code> is set (e.g. <code>:9093</code>):</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Path</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td><code>/healthz</code></td><td>Liveness — <code>200</code> while the process runs</td></tr>
+                <tr><td><code>/readyz</code></td><td><code>200</code> only when the tunnel is connected <em>and</em> the local runtime probe passes; else <code>503</code> with a reason</td></tr>
+                <tr><td><code>/metrics</code></td><td>Prometheus metrics</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 12 · Standalone -->
+        <section class="section" id="standalone">
+          <div class="section-kicker"><span class="n">12</span> Standalone</div>
+          <h2>Self-hosted (Standalone edition)</h2>
+          <p>Security-driven and regulated teams can license <strong>Fallbakit Standalone</strong> — the same engine, self-hosted entirely inside your own network.</p>
+          <div class="grid cols-2">
+            <div class="card key-cyan reveal"><h3 class="cyan">Fully air-gapped</h3><p>Offline Ed25519 license verification — no phone-home. Data never leaves your network.</p></div>
+            <div class="card key-cyan reveal"><h3 class="cyan">Enterprise auth</h3><p>OIDC / SAML SSO, on-prem, with a signed, digest-pinned Docker Compose bundle.</p></div>
+          </div>
+          <div class="callout info">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div><p>Standalone is delivered as a licensed bundle, not a public download. Contact the team at <a href="mailto:tanvirmahin24@gmail.com">tanvirmahin24@gmail.com</a> for an evaluation license and the install runbook.</p></div>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 13 · Troubleshooting -->
+        <section class="section" id="troubleshooting">
+          <div class="section-kicker"><span class="n">13</span> Troubleshooting</div>
+          <h2>Troubleshooting</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Symptom</th><th>Cause &amp; fix</th></tr></thead>
+              <tbody>
+                <tr><td><code>401</code> / <code>403</code> from the API</td><td>Wrong key type. Apps use <span class="kbadge k-app">or_…</span>; the agent uses <span class="kbadge k-runner">rr_…</span>. Don't swap them.</td></tr>
+                <tr><td><code>runner api-key is required</code> (exit 2)</td><td>Set both <code>FALLBAKIT_RUNNER_API_KEY</code> and <code>FALLBAKIT_RUNNER_ID</code> before starting the agent.</td></tr>
+                <tr><td><code>tunnel bootstrap failed 401/403</code></td><td>Bad, disabled, or wrong-type runner key. Rotate it: <code>fallbakit runner rotate &lt;id&gt;</code>.</td></tr>
+                <tr><td><code>invalid local base URL</code> (exit 2)</td><td><code>local_base_url</code> needs scheme + host, e.g. <code>http://localhost:11434</code> — and no <code>/v1</code>.</td></tr>
+                <tr><td><code>/readyz</code> → <code>503 … unavailable</code></td><td>Tunnel is up but the local runtime probe failed. Is Ollama/vLLM running on the expected port?</td></tr>
+                <tr><td><code>/readyz</code> → <code>503 tunnel disconnected</code></td><td>Bootstrap/dial failing — check <code>base_url</code>, outbound egress, and the runner key.</td></tr>
+                <tr><td><code>502</code> with <code>X-Fallbakit-Tunnel-Error</code></td><td>The local runtime rejected or failed the request. Check the model is pulled and the runtime's own logs.</td></tr>
+                <tr><td>vLLM returns <code>401</code></td><td>vLLM was started with <code>--api-key</code>; set <code>FALLBAKIT_LOCAL_API_KEY</code> to match.</td></tr>
+                <tr><td>Container can't reach the host runtime</td><td>Use <code>host.docker.internal</code> plus <code>--add-host=host.docker.internal:host-gateway</code>.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <hr class="hr" />
+
+        <!-- 14 · Reference -->
+        <section class="section" id="reference">
+          <div class="section-kicker"><span class="n">14</span> Reference</div>
+          <h2>Quick reference</h2>
+
+          <h3>Endpoints &amp; URLs</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr><td>Dashboard</td><td><code>https://fallbakit.com</code></td></tr>
+                <tr><td>API (native SDK base URL)</td><td><code>https://api.fallbakit.com</code></td></tr>
+                <tr><td>API (OpenAI SDK base URL)</td><td><code>https://api.fallbakit.com/v1</code></td></tr>
+                <tr><td>Chat completions</td><td><code>POST /v1/chat/completions</code></td></tr>
+                <tr><td>Embeddings</td><td><code>POST /v1/embeddings</code></td></tr>
+                <tr><td>CLI install</td><td><code>curl -fsSL https://fallbakit.com/install.sh | sh</code></td></tr>
+                <tr><td>Agent image</td><td><code>ghcr.io/fallbakit/fallbakit-agent:latest</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Environment variables</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Variable</th><th>Used by</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td><code>FALLBAKIT_API_KEY</code></td><td>App / SDKs</td><td>Your <span class="kbadge k-app">or_…</span> application key</td></tr>
+                <tr><td><code>FALLBAKIT_BASE_URL</code></td><td>App / agent</td><td>Router origin (<code>https://api.fallbakit.com</code>)</td></tr>
+                <tr><td><code>FALLBAKIT_RUNNER_ID</code></td><td>Agent</td><td>Dashboard-generated runner id</td></tr>
+                <tr><td><code>FALLBAKIT_RUNNER_API_KEY</code></td><td>Agent</td><td>Runner <span class="kbadge k-runner">rr_…</span> key</td></tr>
+                <tr><td><code>FALLBAKIT_LOCAL_PROVIDER</code></td><td>Agent</td><td><code>ollama</code> · <code>omlx</code> · <code>vllm</code></td></tr>
+                <tr><td><code>FALLBAKIT_LOCAL_BASE_URL</code></td><td>Agent</td><td>Local runtime origin (no <code>/v1</code>)</td></tr>
+                <tr><td><code>FALLBAKIT_TOKEN</code></td><td>CLI</td><td>CLI <span class="kbadge k-cli">cli_…</span> token</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Ports</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Port</th><th>What</th></tr></thead>
+              <tbody>
+                <tr><td><code>11434</code></td><td>Ollama (local runtime)</td></tr>
+                <tr><td><code>8000</code></td><td>oMLX / vLLM (local runtime)</td></tr>
+                <tr><td><code>9093</code></td><td>Agent health &amp; Prometheus metrics</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout tip">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/><path d="M9 18h6M10 22h4"/></svg>
+            <div><p>Repos: <a href="https://github.com/Fallbakit/cli" target="_blank" rel="noopener">CLI</a> · <a href="https://github.com/Fallbakit/tunnel" target="_blank" rel="noopener">tunnel agent</a> · <a href="https://github.com/Fallbakit/sdk" target="_blank" rel="noopener">SDKs</a>. Questions? <a href="mailto:tanvirmahin24@gmail.com">tanvirmahin24@gmail.com</a>.</p></div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="foot">
+          <a class="brand" href="#top">
+            <img src="assets/logo.svg" alt="" width="22" height="22" />
+            <span class="brand-word">Fallba<span class="accent">kit</span></span>
+          </a>
+          <nav class="foot-links">
+            <a href="https://fallbakit.com" target="_blank" rel="noopener">Dashboard</a>
+            <a href="https://pitch.fallbakit.com" target="_blank" rel="noopener">Pitch</a>
+            <a href="https://github.com/Fallbakit" target="_blank" rel="noopener">GitHub</a>
+            <a href="#top">Back to top ↑</a>
+          </nav>
+          <p class="foot-note">© <span id="year">2026</span> Fallbakit · Run AI on hardware you own — without losing reliability or control.</p>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
